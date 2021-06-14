@@ -5,8 +5,18 @@
 #include <fstream>
 #include <iostream>
 #include "Engine.h"
+#include "Moving.h"
 
-Engine::Engine(const string& filename) : poterakos(), goblinakos(), traalinakos(){
+void Engine :: makeMove(){
+    Point old_point = traalinakos.getPoint();
+    moving.Move(traalinakos,poterakos,maze);
+    Point new_point =  traalinakos.getPoint();
+    maze[old_point.getY()][old_point.getX()] = DIADROMOS;
+    maze[new_point.getY()][new_point.getX()] = TRAALINAKOS;
+
+}
+
+Engine::Engine(const string& filename) :moving(), poterakos(), goblinakos(), traalinakos(){
 
     ifstream file(filename);
     string str;
@@ -35,6 +45,7 @@ Engine::Engine(const string& filename) : poterakos(), goblinakos(), traalinakos(
     this->poterakos.setPoint(startingPoints);
     this->goblinakos.setPoint(startingPoints);
     this->traalinakos.setPoint(startingPoints);
+
 
     mapUpdate();
 

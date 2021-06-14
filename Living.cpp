@@ -5,8 +5,24 @@
 #include "Living.h"
 #include <vector>
 #include <iostream>
+#include <cmath>
+
 
 using namespace std;
+
+
+
+float Point:: euclidean(const Point &point){
+    int x2 = this->x - point.x;
+    int y2 = this->y - point.y;
+
+    x2 = x2*x2;
+    y2 = y2*y2;
+
+    int distance = x2 + y2;
+
+    return sqrt(distance);
+}
 
 void Living::setPoint(const Point &p) {
     inMap.setX(p.getX());
@@ -84,19 +100,26 @@ void Point::setY(int y) {
 Point::~Point() {
 
 }
-
-Traal::Traal() : Living() {
+Monster::Monster() : Living(){
 }
 
-Traal::~Traal() {
+Monster::~Monster(){
 
 }
 
-Goblin::Goblin() : Living() {
+Goblin::Goblin() : Monster() {
 
 }
 
 Goblin::~Goblin() {
+
+}
+
+Traal::Traal() : Monster() {
+
+}
+
+Traal::~Traal(){
 
 }
 

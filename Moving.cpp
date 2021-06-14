@@ -1,21 +1,16 @@
-//
-// Created by lst on 14/6/21.
-//
-
 #include "Moving.h"
-
 #include <cmath>
-
 #include <utility>
 
 using namespace std;
 
+MyMoving::MyMoving(){}
 
 
-void Moving::Move(Traal &traal, Poter &poter, const vector<vector<int>> &maze){
+void MyMoving::Move(Monster &monster, Poter &poter, const vector<vector<int>> &maze){
     vector<Point> possibleMoveSet;
 
-    Point p = traal.getPoint();
+    Point p = monster.getPoint();
 
     possibleMoveSet = get_possible_moveset(p,maze);
 
@@ -24,32 +19,34 @@ void Moving::Move(Traal &traal, Poter &poter, const vector<vector<int>> &maze){
     p = getShortestEuclidean(poter,possibleMoveSet);
 
 
+    monster.getPoint().setX(p.getX());
+    monster.getPoint().setY(p.getY());
 
 
 
 }
-vector<Point> Moving :: get_possible_moveset(const Point &p, const vector<vector<int>> &maze){
+vector<Point> MyMoving :: get_possible_moveset(const Point &p, const vector<vector<int>> &maze){
     vector<Point> possibleMoveSet;
 
     int y = p.getY();
     int x = p.getX();
 
-    if(maze[y+1][x] > 0) {
+    if(maze[y+1][x] == DIADROMOS || maze[y+1][x] == POTERAKOS ) {
         Point p1(x,y+1);
         possibleMoveSet.push_back(p1);
     }
 
-    if(maze[y-1][x] > 0) {
+    if(maze[y-1][x] == DIADROMOS || maze[y-1][x] == POTERAKOS) {
         Point p1(x,y-1);
         possibleMoveSet.push_back(p1);
     }
 
-    if(maze[y][x+1] > 0) {
+    if(maze[y][x+1] == DIADROMOS || maze[y][x+1] == POTERAKOS) {
         Point p1(x+1,y);
         possibleMoveSet.push_back(p1);
     }
 
-    if(maze[y][x-1] > 0) {
+    if(maze[y][x-1] == DIADROMOS || maze[y][x-1] == POTERAKOS) {
         Point p1(x-1,y);
         possibleMoveSet.push_back(p1);
     }
@@ -58,20 +55,35 @@ vector<Point> Moving :: get_possible_moveset(const Point &p, const vector<vector
     return possibleMoveSet;
 }
 
-void Moving::Move(Goblin &goblin, Poter &poter, const vector<vector<int>> &maze) {
+void MyMoving::Move(Goblin &goblin, Poter &poter, const vector<vector<int>> &maze) {
 
 }
 
-void Moving::Move(Poter &poter, const vector<vector<int>> &maze) {
+void MyMoving::Move(Poter &poter, const vector<vector<int>> &maze) {
 
 }
-Point Moving::getShortestEuclidean(Poter &poter, const vector<Point> &possibleMoveSet) {
+Point MyMoving::getShortestEuclidean(Poter &poter, const vector<Point> &possibleMoveSet) {
     int flag_first = 0;
     Point *ret = nullptr;
-    int minEucl = 0;
+    float minEucl = 0;
 
     for(auto p: possibleMoveSet){
+        if(flag_first == 0){
+            ret = &p;
+            minEucl = p.euclidean(poter.getPoint());
+            flag_first = 1;
+        }
+        else{
+            float temp = p.euclidean(poter.getPoint());
+            if(temp<minEucl){
+                minEucl = temp;
+                ret = &p;
+            }
+        }
 
     }
+
+    return *ret;
+
 }
 

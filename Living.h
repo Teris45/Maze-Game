@@ -15,6 +15,8 @@ public:
 
     Point(int x, int y);
 
+    float euclidean(const Point &point);
+
     int getX() const;
 
     void setX(int x);
@@ -63,14 +65,22 @@ public:
     ~Poter() override;
 };
 
-class Goblin: public Living {
+
+class Monster: public Living{
+public:
+    Monster();
+
+    ~Monster() override;
+
+};
+class Goblin: public Monster {
 public:
     Goblin();
 
     ~Goblin() override;
 };
 
-class Traal: public Living {
+class Traal: public Monster {
 public:
     Traal();
 

@@ -5,6 +5,8 @@
 #include<vector>
 #include <string>
 #include "Living.h"
+#include "Moving.h"
+
 
 using namespace std;
 
@@ -23,6 +25,7 @@ private:
     //Walls will be considered as 0, and routes will be considered as 1.
     vector<vector<int>> maze;
 
+    MyMoving moving;
     Poter poterakos;
     Goblin goblinakos;
     Traal traalinakos;
@@ -30,6 +33,8 @@ private:
 
 public:
     Engine(const string& filename);
+
+    void makeMove();
 
     const vector<vector<int>> &getMaze() const;
 

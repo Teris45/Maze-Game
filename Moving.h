@@ -2,10 +2,11 @@
 #define MOVING_H
 
 #include "Living.h"
-
-class Moving {
-
-    void Move(Traal &traal, Poter &poter, const vector<vector<int>> &maze);
+#include "Engine.h"
+class MyMoving {
+public:
+    MyMoving();
+    void Move(Monster &monster, Poter &poter, const vector<vector<int>> &maze);
     void Move(Goblin &goblin, Poter &poter,const vector<vector<int>> &maze);
     void Move(Poter &poter,const vector<vector<int>> &maze);
 
