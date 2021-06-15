@@ -27,6 +27,7 @@ public:
 
     virtual ~Point();
 
+    void print();
 };
 
 

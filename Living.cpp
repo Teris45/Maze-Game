@@ -59,11 +59,8 @@ void Living::setPoint(vector<Point> &starting) {
     this->inMap.setX(starting[rand_int].getX());
     this->inMap.setY(starting[rand_int].getY());
 
+    starting.erase(starting.begin()+rand_int);
 
-    starting.erase(starting.begin()+0);
-
-
-    cout<<endl;
 }
 
 Living::Living() : inMap(0,0){
@@ -100,6 +97,12 @@ void Point::setY(int y) {
 Point::~Point() {
 
 }
+
+void Point::print() {
+    cout<<y<<","<<x<<endl;
+
+}
+
 Monster::Monster() : Living(){
 }
 
