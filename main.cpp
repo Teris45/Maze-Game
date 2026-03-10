@@ -21,6 +21,8 @@ int main(int argc, char *argv[]) {
 
     auto* engine = new Engine(argv[1],argv[2],name);
     engine->printMaze();
+    exit(0);
+
     refresh();
     sleep(1);
 

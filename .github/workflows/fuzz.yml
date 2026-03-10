@@ -1,0 +1,66 @@
+name: AFL++ Fuzzing CI
+
+on:
+  push:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  fuzz:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_REPO: ghcr.io/${{ github.repository }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Normalize image name
+        run: echo "IMAGE_REPO_LOWER=${IMAGE_REPO,,}" >> "$GITHUB_ENV"
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: |
+          docker build \
+            -t "$IMAGE_REPO_LOWER:${GITHUB_SHA}" \
+            -t "$IMAGE_REPO_LOWER:latest" \
+            .
+
+      - name: Push Docker image tags
+        run: |
+          docker push "$IMAGE_REPO_LOWER:${GITHUB_SHA}"
+          docker push "$IMAGE_REPO_LOWER:latest"
+
+      - name: Run AFL++ for 5 minutes
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/afl-output"
+          set +e
+          timeout 300s docker run --rm \
+            --user "$(id -u):$(id -g)" \
+            -e AFL_NO_UI=1 \
+            -v "$GITHUB_WORKSPACE/afl-output:/out" \
+            "$IMAGE_REPO_LOWER:${GITHUB_SHA}"
+          code=$?
+          if [ "$code" -ne 0 ] && [ "$code" -ne 124 ]; then
+            echo "AFL exited early with code $code"
+            exit $code
+          fi
+
+      - name: Compress AFL++ output
+        run: |
+          tar -C "$GITHUB_WORKSPACE" -czf "$GITHUB_WORKSPACE/afl-output-${GITHUB_SHA}.tar.gz" afl-output
+
+      - name: Upload AFL++ artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: afl-output-${{ github.sha }}
+          path: afl-output-${{ github.sha }}.tar.gz
+          if-no-files-found: error
