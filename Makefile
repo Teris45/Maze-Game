@@ -1,10 +1,3 @@
-#
-# In order to execute this "Makefile" just type "make"
-#	A. Delis (ad@di.uoa.gr)
-# 	Pou sai re deli magka
-#	Teaching programming since 1999
-#
-#
 
 OBJS	= main.o Engine.o Living.o Moving.o Gem.o HighScore.o
 SOURCE	= main.cpp Engine.cpp Living.cpp Moving.cpp Gem.cpp HighScore.cpp
